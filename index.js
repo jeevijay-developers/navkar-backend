@@ -6,6 +6,7 @@ const morgan = require("morgan");
 
 const connectDB = require("./config/db");
 const productRoutes = require("./routes/productRoutes");
+const quotationRoutes = require("./routes/quotationRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -32,7 +33,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
@@ -45,6 +46,7 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/products", productRoutes);
+app.use("/api/quotations", quotationRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: `Route ${req.originalUrl} not found` });

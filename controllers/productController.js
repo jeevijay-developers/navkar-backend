@@ -210,6 +210,29 @@ exports.getProducts = asyncHandler(async (_req, res) => {
   res.json(products);
 });
 
+exports.searchProducts = asyncHandler(async (req, res) => {
+  const { q, limit = 5 } = req.query;
+
+  if (!q || typeof q !== "string" || !q.trim()) {
+    res.json([]);
+    return;
+  }
+
+  const searchQuery = q.trim();
+  const maxResults = Math.min(parseInt(limit, 10) || 5, 20);
+
+  // Use text search for better performance with text index
+  const products = await Product.find(
+    { $text: { $search: searchQuery } },
+    { score: { $meta: "textScore" } }
+  )
+    .sort({ score: { $meta: "textScore" } })
+    .limit(maxResults)
+    .select("name materialOfConstruction capType imageUrl variants");
+
+  res.json(products);
+});
+
 exports.getProductById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 

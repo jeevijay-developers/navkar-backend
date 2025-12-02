@@ -86,4 +86,12 @@ const ProductSchema = new mongoose.Schema(
   }
 );
 
+// Create text index for search optimization
+ProductSchema.index({
+  name: "text",
+  materialOfConstruction: "text",
+  capType: "text",
+  description: "text",
+});
+
 module.exports = mongoose.model("Product", ProductSchema);

@@ -11,9 +11,13 @@ const quotationRoutes = require("./routes/quotationRoutes");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const allowedOrigins = process.env.CLIENT_URL
-  ? process.env.CLIENT_URL.split(",").map((origin) => origin.trim())
-  : [];
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.ESTORE_URL,
+  process.env.DASHBOARD_URL,
+]
+  .filter(Boolean)
+  .flatMap((url) => url.split(",").map((origin) => origin.trim()));
 
 const corsOptions = {
   credentials: true,
